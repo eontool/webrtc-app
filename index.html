@@ -28,12 +28,17 @@
     <div class="row m-t-3 text-xs-center">
       <div class="col-lg-12">
         <h1 class="display-4">WebRTC App</h1>
+        <p>
+          Web <em>Real-Time Communications</em> is a standard that defines a collection of communications protocols and application programming interfaces that enable real-time communication over peer-to-peer connections. This enables applications like video conferencing, file transfer, chat, or desktop sharing without the need of either internal or external plugins.
+          <a href="https://en.wikipedia.org/wiki/WebRTC">Learn more at Wikipedia</a>.
+        </p>
         <hr>
       </div>
     </div>
 
     <div class="row m-t-3 m-b-3">
-      <div class="col-lg-4">
+
+      <div class="col-lg-4 offset-lg-4" ng-hide="isConnected">
         <div class="card card-block">
           <form name="connectionForm" ng-submit="startConnection()">
             <label for="">My ID:</label>
@@ -45,11 +50,9 @@
         </div>
       </div>
 
-      <div class="col-lg-8">
+      <div class="col-lg-12" ng-show="isConnected">
         <div class="card card-block pre-scrollable" style="height:300px;" id="messageContainer">
-
         </div>
-
         <form name="messageForm" class="form-inline" ng-submit="sendMessage()">
           <div class="form-group col-lg-8">
             <input type="text" class="form-control form-control-lg" style="width:100%;" name="" id="messageInput" value="" ng-model="message">
@@ -58,10 +61,8 @@
             <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
           </div>
         </form>
-
-
-
       </div>
+
     </div>
 
 

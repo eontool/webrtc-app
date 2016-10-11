@@ -4,6 +4,8 @@ app.controller('mainCtrl', ['$scope', function(scope){
 
   let peer = new Peer({key: '2ly1xbt36ypn9udi'});
 
+  scope.isConnected = false;
+
   peer.on('open', function(id){
     console.log("peer open!");
     scope.myPeerId = id;
@@ -13,13 +15,15 @@ app.controller('mainCtrl', ['$scope', function(scope){
 
   peer.on('connection', function(conn) {
     console.log("connection requested by: ", conn.peer);
+    scope.isConnected = true;
+    scope.$apply();
     scope.requestedBy = conn.peer;
 
     if(scope.conn === null){
       scope.conn = peer.connect(scope.requestedBy);
     }
     conn.on('data', function(data) {
-      $('#messageContainer').append(angular.element('<div>').text(data).addClass('bg-success text-xs-left'));
+      $('#messageContainer').append(angular.element('<div>').text(data).addClass('pull-xs-left')).append(angular.element('<br>'));
       console.log(data);
     });
   });
@@ -36,7 +40,9 @@ app.controller('mainCtrl', ['$scope', function(scope){
         console.log("opening connection!");
         scope.conn = peer.connect(scope.destPeerId);
         scope.conn.on('open', function(){
-          scope.messageHandler('success', 'Connection successful!')
+          scope.messageHandler('success', 'Connection successful!');
+          scope.isConnected = true;
+          scope.$apply();
           console.log("connected to: ", scope.conn.peer);
           console.log(scope.conn);
         });
@@ -57,7 +63,8 @@ app.controller('mainCtrl', ['$scope', function(scope){
   scope.sendMessage = function(){
     if(scope.conn){
       scope.conn.send(scope.message);
-      $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('bg-info text-xs-right'));
+      $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('pull-xs-right')).append(angular.element('<br>'));
+      $('#messageInput').val('');
     }
     else if(scope.requestedBy){
       console.log("No connection exists!");
@@ -65,7 +72,8 @@ app.controller('mainCtrl', ['$scope', function(scope){
       scope.conn = peer.connect(scope.requestedBy);
       scope.conn.on('open', function(){
         scope.conn.send(scope.message);
-        $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('bg-info text-xs-right'));
+        $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('pull-xs-right')).append(angular.element('<br>'));
+        $('#messageInput').val('');
       });
     }
     else{
@@ -86,5 +94,20 @@ app.controller('mainCtrl', ['$scope', function(scope){
       toastr.warning(message);
     }
   };
+
+  // $('#messageContainer').on('scroll', function(event) {
+  //   console.log("scroll");
+  //   var element, height, scrollHeight, scrollTop;
+  //   element = $(this);
+  //   scrollTop = element.scrollTop();
+  //   scrollHeight = element.prop('scrollHeight');
+  //   height = element.height();
+  //   if (scrollTop < scrollHeight - height - 25) {
+  //     disableScroll();
+  //   }
+  //   if (scrollTop > scrollHeight - height - 10) {
+  //     return enableScroll();
+  //   }
+  // });
 
 }]);
