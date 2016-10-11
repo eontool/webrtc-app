@@ -44,9 +44,9 @@ app.controller('mainCtrl', ['$scope', function(scope){
     scope.peerUsername = conn.metadata.username;
     scope.messageHandler('success', 'connection requested.')
     loginOrChat('chat');
+    loading(false);
     scope.$digest();
     scope.requestedBy = conn.peer;
-
     if(scope.conn === null){
       scope.conn = peer.connect(scope.requestedBy);
     }
@@ -125,20 +125,5 @@ app.controller('mainCtrl', ['$scope', function(scope){
       toastr.warning(message);
     }
   };
-
-  // $('#messageContainer').on('scroll', function(event) {
-  //   console.log("scroll");
-  //   var element, height, scrollHeight, scrollTop;
-  //   element = $(this);
-  //   scrollTop = element.scrollTop();
-  //   scrollHeight = element.prop('scrollHeight');
-  //   height = element.height();
-  //   if (scrollTop < scrollHeight - height - 25) {
-  //     disableScroll();
-  //   }
-  //   if (scrollTop > scrollHeight - height - 10) {
-  //     return enableScroll();
-  //   }
-  // });
 
 }]);
