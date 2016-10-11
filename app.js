@@ -27,18 +27,21 @@ app.controller('mainCtrl', ['$scope', function(scope){
   };
 
   let peer = new Peer({key: '2ly1xbt36ypn9udi'});
-  scope.isConnected = false;
 
 
   peer.on('open', function(id){
     loading(false);
     loginOrChat('login');
     scope.myPeerId = id;
+    scope.utils = util;
     scope.$digest();
   });
 
+  peer.on()
 
   peer.on('connection', function(conn) {
+    //console.log(conn);
+    scope.peerUsername = conn.metadata.username;
     scope.messageHandler('success', 'connection requested.')
     loginOrChat('chat');
     scope.$digest();
@@ -54,6 +57,13 @@ app.controller('mainCtrl', ['$scope', function(scope){
 
   //start connection
 
+
+  let options = {
+    metadata: {
+      username: 'Remote User'
+    }
+  };
+
   scope.startConnection = function(){
     if(scope.destPeerId === scope.myPeerId){
       scope.messageHandler('error', 'You can\'t connect to yourself!' );
@@ -61,17 +71,18 @@ app.controller('mainCtrl', ['$scope', function(scope){
     else{
       loading(true);
       if(!scope.conn){
-        scope.conn = peer.connect(scope.destPeerId);
+        scope.conn = peer.connect(scope.destPeerId, options);
         scope.conn.on('open', function(){
           loading(false);
           loginOrChat('chat');
           scope.messageHandler('success', 'Connection successful!');
           scope.$digest();
         });
-        peer.on('error', function(){
+        peer.on('error', function(error){
+          console.log(error, error.type);
           loading(false);
           scope.conn = null;
-          scope.messageHandler('error', 'Connection failed!')
+          scope.messageHandler('error', 'Connection failed!<br>'+ error.type)
         });
       }
       if(scope.conn.open){
@@ -90,7 +101,7 @@ app.controller('mainCtrl', ['$scope', function(scope){
       $('#messageInput').val(null);
     }
     else if(scope.requestedBy){
-      scope.conn = peer.connect(scope.requestedBy);
+      scope.conn = peer.connect(scope.requestedBy, options);
       scope.conn.on('open', function(){
         scope.conn.send(scope.message);
         $('#messageContainer').prepend(angular.element('<div>').text(scope.message).addClass('bubble2')).append(angular.element('<br>'));

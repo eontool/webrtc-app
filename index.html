@@ -43,7 +43,9 @@
     <div class="row m-t-3 m-b-3">
 
       <div class="col-lg-4 offset-lg-4" id="loginBox" style="display: none;">
+
         <div class="card card-block">
+
           <form name="connectionForm" ng-submit="startConnection()">
             <label for="">My ID:</label>
             <input type="text" class="form-control form-control-lg input-lg m-b-1" name="myPeerId" value="" ng-model="myPeerId" readonly="">
@@ -51,7 +53,26 @@
             <input type="text" class="form-control form-control-lg m-b-1" name="destPeerId" ng-model="destPeerId" required="">
             <button type="submit" class="btn btn-primary btn-lg btn-block" name="" ng-disabled="connectionForm.$error.required">Connect</button>
           </form>
+
+          <hr>
+
+          <ul>
+            <li>Browser: <strong>{{ utils.browser }}</strong></li>
+            <li>Supports
+              <ul>
+                <li>audioVideo: {{ utils.supports.audioVideo }}</li>
+                <li>data: {{ utils.supports.data }}</li>
+                <li>binary: {{ utils.supports.binary }}</li>
+                <li>binaryBlob: {{ utils.supports.binaryBlob }}</li>
+                <li>reliable: {{ utils.supports.reliable }}</li>
+                <li>sctp: {{ utils.supports.sctp }}</li>
+                <li>onnegotiationneeded: {{ utils.supports.onnegotiationneeded }}</li>
+              </ul>
+            </li>
+          </ul>
+
         </div>
+
       </div>
 
       <div class="col-lg-12" id="chatBox" style="display: none;">
@@ -70,7 +91,8 @@
 
           <div class="card">
             <div class="card-header">
-              Messages
+              <span class="pull-xs-left">Remote User</span>
+              <span class="pull-xs-right">Me</span>
             </div>
 
             <div class="card-block pre-scrollable" style="height:300px;" id="messageContainer">
