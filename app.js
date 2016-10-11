@@ -68,7 +68,7 @@ app.controller('mainCtrl', ['$scope', function(scope){
 
   scope.startConnection = function(){
     if(scope.destPeerId === scope.myPeerId){
-      scope.messageHandler('error', 'You can\'t connect to yourself!' );
+      scope.messageHandler('error', 'Don\'t be silly, you can\'t connect yourself!' );
     }
     else{
       loading(true);
