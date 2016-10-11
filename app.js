@@ -26,7 +26,7 @@ app.controller('mainCtrl', ['$scope', function(scope){
     }
   };
 
-  let peer = new Peer({key: '2ly1xbt36ypn9udi'});
+  let peer = new Peer({key: '2ly1xbt36ypn9udi', secure: false, debug: 3});
 
 
   peer.on('open', function(id){
@@ -61,7 +61,9 @@ app.controller('mainCtrl', ['$scope', function(scope){
   let options = {
     metadata: {
       username: 'Remote User'
-    }
+    },
+    reliable: true,
+    serialization: 'json'
   };
 
   scope.startConnection = function(){
