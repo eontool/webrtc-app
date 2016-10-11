@@ -10,6 +10,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/css/tether.min.css" rel="stylesheet" media="screen">
   <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" media="screen">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" media="screen">
+  <link href="style.css" rel="stylesheet" media="screen">
+
 
   <script src="http://code.jquery.com/jquery-3.1.1.min.js" charset="utf-8"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js" charset="utf-8"></script>
@@ -22,6 +24,8 @@
 
 </head>
 <body>
+
+  <div class="loading"></div>
 
   <div class="container">
 
@@ -38,7 +42,7 @@
 
     <div class="row m-t-3 m-b-3">
 
-      <div class="col-lg-4 offset-lg-4" ng-hide="isConnected">
+      <div class="col-lg-4 offset-lg-4" id="loginBox" style="display: none;">
         <div class="card card-block">
           <form name="connectionForm" ng-submit="startConnection()">
             <label for="">My ID:</label>
@@ -50,26 +54,38 @@
         </div>
       </div>
 
-      <div class="col-lg-12" ng-show="isConnected">
-        <div class="card card-block pre-scrollable" style="height:300px;" id="messageContainer">
-        </div>
+      <div class="col-lg-12" id="chatBox" style="display: none;">
+
         <form name="messageForm" class="form-inline" ng-submit="sendMessage()">
-          <div class="form-group col-lg-8">
-            <input type="text" class="form-control form-control-lg" style="width:100%;" name="" id="messageInput" value="" ng-model="message">
+          <div class="form-group col-lg-10">
+            <input type="text" name="" rows="1" style="width:100%;" class="form-control form-control-lg" name="messageInput" id="messageInput" value="" ng-model="message" required="">
           </div>
-          <div class="form-group col-lg-4">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+          <div class="form-group col-lg-2">
+            <button type="submit" class="btn btn-success btn-lg btn-block" ng-disabled="messageForm.messageInput.$error.required">Send</button>
           </div>
         </form>
+
+        <div class="col-lg-12">
+          <hr>
+
+          <div class="card">
+            <div class="card-header">
+              Messages
+            </div>
+
+            <div class="card-block pre-scrollable" style="height:300px;" id="messageContainer">
+            </div>
+
+            <div class="card-footer text-muted">
+              Settings: {{ }}
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
-
-
-
-
-
-
 
   </div>
 

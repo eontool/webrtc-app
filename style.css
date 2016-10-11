@@ -1,0 +1,35 @@
+.loading{
+  background: url('img/loading.svg') 50% 50% no-repeat #FFF;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+
+#messageContainer{
+  background-color: #DDD;
+}
+
+.bubble1{
+  display: block;
+  font-size: 18px;
+  background-color: #FFF;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: left;
+  margin: 2px 0 ;
+}
+
+.bubble2{
+  display: block;
+  font-size: 18px;
+  background-color: #dcf8c6;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: right;
+    margin: 2px 0 ;
+}

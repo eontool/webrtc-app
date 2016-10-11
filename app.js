@@ -2,57 +2,80 @@ var app = angular.module('mainApp', []);
 
 app.controller('mainCtrl', ['$scope', function(scope){
 
-  let peer = new Peer({key: '2ly1xbt36ypn9udi'});
+  let spinner = $('.loading');
+  let loginBox = $('#loginBox');
+  let chatBox = $('#chatBox');
 
+  let loading = function(state){
+    if(state){
+      spinner.fadeIn(250);
+    }
+    else {
+      spinner.fadeOut(250);
+    }
+  };
+
+  let loginOrChat = function(state){
+    if (state === 'login') {
+      chatBox.fadeOut(250);
+      loginBox.fadeIn(250);
+    }
+    if (state === 'chat') {
+      loginBox.fadeOut(250);
+      chatBox.fadeIn(250);
+    }
+  };
+
+  let peer = new Peer({key: '2ly1xbt36ypn9udi'});
   scope.isConnected = false;
 
+
   peer.on('open', function(id){
-    console.log("peer open!");
+    loading(false);
+    loginOrChat('login');
     scope.myPeerId = id;
-    scope.$apply();
-    console.log('My peer ID is: ' + id);
+    scope.$digest();
   });
 
+
   peer.on('connection', function(conn) {
-    console.log("connection requested by: ", conn.peer);
-    scope.isConnected = true;
-    scope.$apply();
+    scope.messageHandler('success', 'connection requested.')
+    loginOrChat('chat');
+    scope.$digest();
     scope.requestedBy = conn.peer;
 
     if(scope.conn === null){
       scope.conn = peer.connect(scope.requestedBy);
     }
     conn.on('data', function(data) {
-      $('#messageContainer').append(angular.element('<div>').text(data).addClass('pull-xs-left')).append(angular.element('<br>'));
-      console.log(data);
+      $('#messageContainer').prepend(angular.element('<div>').text(data).addClass('bubble1')).append(angular.element('<br>'));
     });
   });
 
   //start connection
 
   scope.startConnection = function(){
-    //scope.conn = null;
     if(scope.destPeerId === scope.myPeerId){
       scope.messageHandler('error', 'You can\'t connect to yourself!' );
     }
     else{
+      loading(true);
       if(!scope.conn){
-        console.log("opening connection!");
         scope.conn = peer.connect(scope.destPeerId);
         scope.conn.on('open', function(){
+          loading(false);
+          loginOrChat('chat');
           scope.messageHandler('success', 'Connection successful!');
-          scope.isConnected = true;
-          scope.$apply();
-          console.log("connected to: ", scope.conn.peer);
-          console.log(scope.conn);
+          scope.$digest();
         });
         peer.on('error', function(){
+          loading(false);
           scope.conn = null;
-          console.log("error!");
           scope.messageHandler('error', 'Connection failed!')
         });
       }
       if(scope.conn.open){
+        loading(false);
         scope.messageHandler('warning', 'Connection already exists!')
       }
     }
@@ -63,21 +86,18 @@ app.controller('mainCtrl', ['$scope', function(scope){
   scope.sendMessage = function(){
     if(scope.conn){
       scope.conn.send(scope.message);
-      $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('pull-xs-right')).append(angular.element('<br>'));
-      $('#messageInput').val('');
+      $('#messageContainer').prepend(angular.element('<div>').text(scope.message).addClass('bubble2')).append(angular.element('<br>'));
+      $('#messageInput').val(null);
     }
     else if(scope.requestedBy){
-      console.log("No connection exists!");
-      console.log("Attempting connection!");
       scope.conn = peer.connect(scope.requestedBy);
       scope.conn.on('open', function(){
         scope.conn.send(scope.message);
-        $('#messageContainer').append(angular.element('<div>').text(scope.message).addClass('pull-xs-right')).append(angular.element('<br>'));
-        $('#messageInput').val('');
+        $('#messageContainer').prepend(angular.element('<div>').text(scope.message).addClass('bubble2')).append(angular.element('<br>'));
+        $('#messageInput').val(null);
       });
     }
     else{
-      console.log("No id provided.");
     }
   }
 
